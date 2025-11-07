@@ -1,5 +1,8 @@
 # Magician Project – General Visual Perception
 
+
+![Screenshot of Y-MAP-NET working during Magician integration meetings](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot2.jpg?raw=true) 
+
 **Repository:** [magician-project/magician_general_visual_perception](https://github.com/magician-project/magician_general_visual_perception)
 **Paper:** [Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images](https://arxiv.org/abs/2411.10334)
 
@@ -86,6 +89,8 @@ The setup script automatically downloads pretrained weights:
 ```bash
 scripts/downloadPretrained.sh
 ```
+
+![Screenshot of Y-MAP-NET working on data from factory floor](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot1.jpg?raw=true) 
 
 
 ---
