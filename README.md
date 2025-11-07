@@ -24,7 +24,7 @@ This work is part of the **Magician Project**, a European initiative focused on 
 ## 📄 Reference
 
 > **Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images**
-> *A. Aly et al., 2024*
+> *Qammaz et al., 2024*
 > [arXiv:2411.10334](https://arxiv.org/abs/2411.10334)
 
 ---
@@ -46,7 +46,7 @@ It automatically installs required system and Python dependencies and sets up th
 Run:
 
 ```bash
-bash scripts/setup.sh
+scripts/setup.sh
 ```
 
 This script will:
@@ -55,14 +55,6 @@ This script will:
 * Install Python dependencies from `requirements.txt`
 * Install TensorFlow with CUDA support (if available)
 * Download pretrained model data if missing
-
-#### ⚙️ Optional: Run in Google Colab mode
-
-If you are running in a Colab environment, use:
-
-```bash
-bash scripts/setup.sh --collab
-```
 
 This disables the virtual environment and installs dependencies globally in the Colab runtime.
 
@@ -75,12 +67,9 @@ Main Python dependencies (see `requirements.txt`):
 * `tensorflow[and-cuda]`
 * `tensorflow-model-optimization`
 * `tf_keras`
-* `onnx` and `onnxruntime`
 * `opencv-python`
-* `gradio`
 * `numba`
 * `numpy`
-* `tensorboard` and `tensorboard-plugin-profile`
 
 System dependencies automatically handled by `setup.sh`:
 
@@ -92,23 +81,12 @@ python3-venv python3-pip zip wget libhdf5-dev libzstd-dev rsync numactl
 
 ## ⬇️ Pretrained Model Download
 
-If no model directory is found, the setup script automatically downloads pretrained weights:
+The setup script automatically downloads pretrained weights:
 
 ```bash
-bash scripts/downloadPretrained.sh
+scripts/downloadPretrained.sh
 ```
 
-This script retrieves and unzips:
-
-```
-2d_pose_estimation_v180.zip
-```
-
-from the official model archive at:
-
-```
-http://ammar.gr/poseanddepth/archive/
-```
 
 ---
 
@@ -198,9 +176,9 @@ magician_general_visual_perception/
 If you use this repository or Y-MAP-Net in your research, please cite:
 
 ```bibtex
-@article{aly2024ymapnet,
+@article{qammaz2024ymapnet,
   title={Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images},
-  author={Aly, Ammar and others},
+  author={A. Qammaz, N. Vasilikopoulos, I. Oikonomidis and A.A. Argyros},
   journal={arXiv preprint arXiv:2411.10334},
   year={2024}
 }
@@ -214,6 +192,7 @@ If you use this repository or Y-MAP-Net in your research, please cite:
 ## 📜 License
 
 This repository is distributed under the **FORTH license** (see `LICENSE` file).
+
 
 ---
 
