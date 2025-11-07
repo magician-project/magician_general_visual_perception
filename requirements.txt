@@ -1,0 +1,12 @@
+tensorflow[and-cuda] 
+tensorflow-model-optimization
+tf_keras
+numpy
+numba
+tensorboard
+tensorboard-plugin-profile
+etils
+importlib_resources
+opencv-python
+wget
+gradio 
