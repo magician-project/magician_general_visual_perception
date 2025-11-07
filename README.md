@@ -30,6 +30,8 @@ This work is part of the **Magician Project**, a European initiative focused on 
 > *Qammaz et al., 2024*
 > [arXiv:2411.10334](https://arxiv.org/abs/2411.10334)
 
+
+![Screenshot of Y-MAP-NET working on data from factory floor](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot1.jpg?raw=true) 
 ---
 
 ## ⚙️ Setup Instructions
@@ -90,7 +92,6 @@ The setup script automatically downloads pretrained weights:
 scripts/downloadPretrained.sh
 ```
 
-![Screenshot of Y-MAP-NET working on data from factory floor](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot1.jpg?raw=true) 
 
 
 ---
