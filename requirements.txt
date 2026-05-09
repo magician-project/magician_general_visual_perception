@@ -1,8 +1,0 @@
-tensorflow[and-cuda] 
-tf_keras
-numpy
-numba
-etils
-importlib_resources
-opencv-python
-wget
