@@ -1,206 +1,149 @@
-# Magician Project – General Visual Perception
+# Magician Project — General Visual Perception
 
+[![Open Y-MAP-Net In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ICS-CVRL-HCCV/Y-MAP-Net/blob/main/scripts/y-map-net.ipynb)
 
-![Screenshot of Y-MAP-NET working during Magician integration meetings](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot2.jpg?raw=true) 
-
-**Repository:** [magician-project/magician_general_visual_perception](https://github.com/magician-project/magician_general_visual_perception)
-**Paper:** [Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images](https://arxiv.org/abs/2411.10334)
-
----
-
-## 🧠 Overview
-
-This repository contains the **runtime implementation** of **Y-MAP-Net**, a unified neural architecture capable of performing **real-time visual perception tasks** from a single RGB image, including:
-
-* **Depth estimation**
-* **Surface normal prediction**
-* **Semantic segmentation**
-* **Multi-label image captioning**
-* **2D human pose estimation**
-
-Y-MAP-Net is designed for **real-time performance** on modern GPUs and supports flexible input sources such as webcam, image, or video files.
-
-This work is part of the **Magician Project**, a European initiative focused on **multi-modal general AI perception systems**.
+**Repository:** [magician-project/magician_general_visual_perception](https://github.com/magician-project/magician_general_visual_perception)  
+**Y-MAP-Net code:** [FORTH-ICS-CVRL-HCCV/Y-MAP-Net](https://github.com/FORTH-ICS-CVRL-HCCV/Y-MAP-Net)  
+**Paper (ICRA 2026):** [Y-MAP-Net: Learning from Foundation Models for Real-Time, Multi-Task Scene Perception](https://arxiv.org/abs/2411.10334)
 
 ---
 
-## 📄 Reference
+## Overview
 
-> **Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images**
-> *Qammaz et al., 2024*
-> [arXiv:2411.10334](https://arxiv.org/abs/2411.10334)
+This repository is the **MAGICIAN Project** integration wrapper for **Y-MAP-Net**, a unified, Y-shaped neural architecture that performs **real-time multi-task visual scene understanding** from a single RGB image in a single forward pass.
 
+Y-MAP-Net is trained using a multi-teacher, single-student paradigm, where task-specific foundation models supervise the student network, enabling it to distil rich perceptual capabilities into an efficient real-time model well-suited for robotic platforms.
 
-![Screenshot of Y-MAP-NET working on data from factory floor](https://github.com/magician-project/magician_general_visual_perception/blob/main/doc/screenshot1.jpg?raw=true) 
+### Outputs
+
+The current training configuration (serial 270) produces **73 output channels** spanning six perceptual tasks:
+
+| Task | Channels | Description |
+|------|----------|-------------|
+| **2D Human Pose** | 17 keypoints | COCO-format body joints (nose, eyes, ears, shoulders, elbows, wrists, hips, knees, ankles) |
+| **Part Affinity Fields** | 12 limb connections | Skeleton connectivity maps for multi-person association |
+| **Depth Estimation** | 1 + 1 | Metric depth map and binary depth-level threshold |
+| **Surface Normals** | 3 (X, Y, Z) | Per-pixel surface orientation |
+| **Image Denoising** | 3 (R, G, B) | Reconstructed denoised RGB image |
+| **Lateral Labelling** | 2 | Left / right body-joint segmentation masks |
+| **Semantic Segmentation** | 34 classes | Person, Face, Hand, Foot, Vehicle, Animal, Robot, Label/Text, Box, Tool, Instrument, Appliance/Electronics, Conveyor, Chair, Table, Bed, Furniture, Light, Floor, Ceiling, Wall, Door, Window, Plant/Vegetation, Road, Dirt, Sidewalk, Building, Mountain, Sky, Food, Fruit, Water, Cup |
+
 ---
 
-## ⚙️ Setup Instructions
+## Training Checkpoints
 
-### 1. Clone the Repository
+The figures below show output visualisations from recent training runs on COCO 2017/2014. Each row illustrates simultaneous predictions across all active output heads from a single RGB input frame.
+
+**Experiment 260+** — extended output head training checkpoint:
+
+![Experiment 260+ training checkpoint results](doc/exp260plus.jpg)
+
+**Experiment 261+** — subsequent checkpoint with further training:
+
+![Experiment 261+ training checkpoint results](doc/exp261plus.jpg)
+
+**Live integration** — Y-MAP-Net running during MAGICIAN integration meetings:
+
+![Y-MAP-Net during Magician integration](doc/screenshot2.jpg)
+
+---
+
+## Setup
+
+### 1. Clone this repository
 
 ```bash
 git clone https://github.com/magician-project/magician_general_visual_perception.git
 cd magician_general_visual_perception
 ```
 
-### 2. Run the Setup Script
-
-A setup script is provided in `scripts/setup.sh`.
-It automatically installs required system and Python dependencies and sets up the pretrained model.
-
-Run:
+### 2. Run the setup script
 
 ```bash
 scripts/setup.sh
 ```
 
-This script will:
+This will:
 
-* Create a virtual environment (`venv/`)
-* Install Python dependencies from `requirements.txt`
-* Install TensorFlow with CUDA support (if available)
-* Download pretrained model data if missing
+1. Clone [Y-MAP-Net](https://github.com/FORTH-ICS-CVRL-HCCV/Y-MAP-Net) into `Y-MAP-Net/` (if not already present)
+2. Delegate to `Y-MAP-Net/scripts/setup.sh`, which installs all system and Python dependencies and downloads the pretrained model
 
-This disables the virtual environment and installs dependencies globally in the Colab runtime.
-
----
-
-## 🧩 Dependencies
-
-Main Python dependencies (see `requirements.txt`):
-
-* `tensorflow[and-cuda]`
-* `tensorflow-model-optimization`
-* `tf_keras`
-* `opencv-python`
-* `numba`
-* `numpy`
-
-System dependencies automatically handled by `setup.sh`:
-
-```
-python3-venv python3-pip zip wget libhdf5-dev libzstd-dev rsync numactl
-```
-
----
-
-## ⬇️ Pretrained Model Download
-
-The setup script automatically downloads pretrained weights:
+Pass `--collab` for Google Colab environments (no venv):
 
 ```bash
-scripts/downloadPretrained.sh
+scripts/setup.sh --collab
 ```
-
-
 
 ---
 
-## 🚀 Running Y-MAP-Net
+## Running Y-MAP-Net
 
-The main runtime entry point is:
+After setup, run from the `Y-MAP-Net/` directory:
 
 ```bash
-python3 runYMAPNet.sh
+cd Y-MAP-Net
+./runYMAPNet.sh
 ```
 
-By default, it:
-
-* Loads the pretrained model from `2d_pose_estimation/`
-* Starts webcam-based real-time inference (640×480)
-* Displays live visualization with detected keypoints, segmentation, and depth overlay
+See [Y-MAP-Net/README.md](https://github.com/FORTH-ICS-CVRL-HCCV/Y-MAP-Net/blob/main/README.md) for the full list of command-line options, including webcam input, video files, headless mode, and alternative inference backends (TFLite, ONNX, JAX).
 
 ---
 
-### 🧭 Command-line Options
+## Pre-trained Models
 
-| Option                    | Description                                                      |
-| ------------------------- | ---------------------------------------------------------------- |
-| `--from <path>`           | Use a video file or image instead of the webcam                  |
-| `--scale <float>`         | Resize input frames (e.g., `--scale 0.5`)                        |
-| `--size <width> <height>` | Set custom input resolution                                      |
-| `--threshold <value>`     | Adjust keypoint detection threshold                              |
-| `--border <int>`          | Emulate border pattern in visualization                          |
-| `--crop <x> <y> <size>`   | Apply custom square crop on input                                |
-| `--nocrop`                | Disable automatic cropping                                       |
-| `--tile`                  | Enable tiled inference for large frames                          |
-| `--blur <int>`            | Apply blur filter before inference                               |
-| `--noise <float>`         | Add Gaussian noise to input (0.0–1.0)                            |
-| `--profiling`             | Enable runtime performance profiling                             |
-| `--engine <backend>`      | Choose inference backend (`tensorflow` or `onnx`)                |
-| `--illustrate`            | Save output illustrations instead of displaying live             |
-| `--save`                  | Save processed frames and generate output videos                 |
-| `--headless`              | Run without visualization (for batch mode)                       |
-| `--collab`                | Enable Colab-friendly mode (implies `--illustrate` and `--save`) |
+| Format | Model | Size | Download | Engine flag |
+|--------|-------|------|----------|-------------|
+| Keras (ICRA26) | Full | 2.1 GB | [GDrive](https://drive.google.com/file/d/1DPSYH3_l2T_iaTAjpkMc9oh1VOwEJdpc/view?usp=drive_link) / [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/resolve/main/2d_pose_estimation_v180.zip?download=true) | `--engine tf` |
+| Keras (dev) | Full | 1.8 GB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/resolve/main/2d_pose_estimation_v263.zip?download=true) | `--engine tf` |
+| TFLite FP32 | Lite | ~268 MB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/blob/main/2d_pose_estimation_v265_tflite_fp32.zip) | `--engine tflite` |
+| TFLite FP16 | Lite | ~210 MB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/resolve/main/2d_pose_estimation_v265_tflite_fp16.zip?download=true) | `--engine tflite` |
+| ONNX FP32 | Lite | ~268 MB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/blob/main/2d_pose_estimation_v265_onnx.zip) | `--engine onnx` |
+| ONNX FP16 | Lite | ~209 MB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/blob/main/2d_pose_estimation_v265_onnx_fp16.zip) | `--engine onnx` |
+| JAX (npz) | Lite | ~268 MB | [HuggingFace](https://huggingface.co/AmmarkoV/Y-MAP-Net/resolve/main/2d_pose_estimation_v265_jax.zip?download=true) | `--engine jax` |
 
 ---
 
-### 🎮 Keyboard Controls (during live visualization)
-
-| Key          | Action                              |
-| ------------ | ----------------------------------- |
-| `q` or `ESC` | Quit the application                |
-| `s`          | Save a 3D point cloud (`.ply` file) |
-| `u`          | Upload the current frame            |
-| `a`          | Save a demo screenshot              |
-| `←`          | Navigate left (reserved)            |
-
----
-
-## 💾 Output Files
-
-When `--save` is enabled, output frames and visualizations are stored as PNGs and later compiled into videos:
-
-| Output                 | Description                      |
-| ---------------------- | -------------------------------- |
-| `*_lastRun3DHiRes.mp4` | 3D pose + depth output video     |
-| `*_illustration.mp4`   | Visualization of network outputs |
-| `colorFrame_*.png`     | Individual processed frames      |
-| `composite_*.png`      | Composite visualization frames   |
-
----
-
-## 🧰 Project Structure
+## Project Structure
 
 ```
 magician_general_visual_perception/
 │
-├── 2d_pose_estimation/            # Pretrained model files (auto-downloaded)
 ├── scripts/
-│   ├── setup.sh                   # Environment setup script
-│   └── downloadPretrained.sh      # Model download helper
-│
-├── runYMAPNet.sh                  # Main runtime entry script
-├── requirements.txt               # Python dependencies
-└── README.md                      # This file
+│   └── setup.sh            # Clones Y-MAP-Net and delegates to its setup
+├── doc/                    # Screenshots and training visualisations
+├── CMakeLists.txt          # ROS build integration
+├── package.xml             # ROS package descriptor
+└── README.md
 ```
+
+All model code lives in `Y-MAP-Net/` (cloned at setup time).
 
 ---
 
-## 🔬 Citation
+## Citation
 
-If you use this repository or Y-MAP-Net in your research, please cite:
+If you use this work, please cite:
 
 ```bibtex
-@article{qammaz2024ymapnet,
-  title={Y-MAP-Net: Real-time depth, normals, segmentation, multi-label captioning and 2D human pose in RGB images},
-  author={A. Qammaz, N. Vasilikopoulos, I. Oikonomidis and A.A. Argyros},
-  journal={arXiv preprint arXiv:2411.10334},
-  year={2024}
+@inproceedings{qammaz2026ymapnet,
+  author    = {Qammaz, Ammar and Vasilikopoulos, Nikos and Oikonomidis, Iason and Argyros, Antonis A},
+  title     = {Y-MAP-Net: Learning from Foundation Models for Real-Time, Multi-Task Scene Perception},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA 2026)},
+  year      = {2026},
+  month     = {June}
 }
 ```
 
 ---
- 
+
+## Acknowledgement
+
+This work has been supported by the **MAGICIAN** project, funded by the European Union's Horizon 2020 research and innovation programme under grant agreement No. **101120731**.
+
+The views and opinions expressed are those of the authors and do not necessarily reflect those of the European Union or the European Research Executive Agency (REA). Neither the European Union nor the granting authority can be held responsible for them.
 
 ---
 
-## 📜 License
+## License
 
-This repository is distributed under the **FORTH license** (see `LICENSE` file).
-
-
----
-
-Would you like me to tailor it slightly for **academic presentation style** (e.g., for inclusion in an arXiv-linked code repo), or keep it **developer-oriented** as above?
-
+This repository is distributed under the FORTH license (see `license.txt`).
