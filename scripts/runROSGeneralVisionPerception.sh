@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Resolve paths from this script so it works from any working directory.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit 1
+# readlink -f follows symlinks, so a link to this script outside the repo works too.
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")" || exit 1
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 PACKAGE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)" || exit 1
 WORKSPACE_DIR="$(cd "$PACKAGE_DIR/../.." && pwd)" || exit 1
 YMAP_DIR="$PACKAGE_DIR/Y-MAP-Net"
-YMAP_DIR="/home/plot/ros_ws/src/magician_general_visual_perception/Y-MAP-Net/"
 
 if [[ ! -f "$WORKSPACE_DIR/install/setup.bash" ]]; then
     echo "ROS workspace setup not found: $WORKSPACE_DIR/install/setup.bash" >&2
